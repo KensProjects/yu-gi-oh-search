@@ -8,8 +8,8 @@ type TCardImages = {
 export type TCardData = {
     id: number | null,
     name: string | null,
-    type: String | null,
-    frameType: String | null
+    type: string | null,
+    frameType: string | null
     desc: string | null,
     atk: number | null,
     def: number | null,
@@ -55,12 +55,19 @@ export const useCardStore = create<CardStore>()((set) => ({
     cardInfo: null,
     setName: (newCardName: string) => set({ cardName: newCardName }),
     setCardInfo: async (cardName: string) => {
-        const res = await axios.get(`https://db.ygoprodeck.com/api/v7/cardinfo.php?name=${cardName}`);
-        const data = await res.data.data[0];
-        console.log(data)
-        set({ cardInfo: data })
-        return data
+        try {
+            const res = await axios.get(`https://db.ygoprodeck.com/api/v7/cardinfo.php?name=${cardName}`);
+            const data = await res.data.data[0];
+            console.log(data)
+            set({ cardInfo: data })
+            return data
+
+        } catch (error: any) {
+            if (error) {
+                return (error.response.data.error)
+            }
+        }
+
     }
 
 }))
-
